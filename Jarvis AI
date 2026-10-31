@@ -1,0 +1,6 @@
+<html>
+<style>
+   div{min-height:1em;}
+</style>
+<body>from kivy.app import App<br/>from kivy.uix.label import Label<br/>from kivy.uix.boxlayout import BoxLayout<br/><br/>class JarvisApp(App):<br/>    def build(self):<br/>        self.title = &#39;Jarvis AI&#39;<br/>        layout = BoxLayout(orientation=&#39;vertical&#39;, padding=20)<br/>        self.label = Label(<br/>            text=&quot;Jarvis AI Base Version 0.1\n(Sir, system online hai)&quot;, <br/>            font_size=24, <br/>            halign=&#39;center&#39;<br/>        )<br/>        layout.add_widget(self.label)<br/>        return layout<br/><br/>if __name__ == &#39;__main__&#39;:<br/>    JarvisApp().run()<br/></body>
+</html>
