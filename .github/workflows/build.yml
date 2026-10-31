@@ -6,42 +6,60 @@ on:
 
 jobs:
   build:
-  
     runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Get Date
-      id: get-date
-      run: |
-        echo "date=$(/bin/date -u "+%Y%m%d")" >> $GITHUB_ENV
-      shell: bash
-
-    - name: Cache Buildozer global directory
-      uses: actions/cache@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
-        path: ~/.buildozer
-        key: buildozer-global-${{ env.date }}
+        python-version: '3.10'
 
-    - uses: actions/cache@v4
-      with:
-        path: .buildozer
-        key: ${{ hashFiles('buildozer.spec') }}
-
-    - name: Install dependencies
+    - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+        sudo apt-get install -y \
+            python3-pip \
+            build-essential \
+            git \
+            python3-dev \
+            ffmpeg \
+            libsdl2-dev \
+            libsdl2-image-dev \
+            libsdl2-mixer-dev \
+            libsdl2-ttf-dev \
+            libportmidi-dev \
+            libswscale-dev \
+            libavformat-dev \
+            libavcodec-dev \
+            zlib1g-dev \
+            libgstreamer1.0-dev \
+            gstreamer1.0-plugins-base \
+            gstreamer1.0-plugins-good \
+            autoconf \
+            libtool \
+            pkg-config \
+            ant \
+            openjdk-17-jdk \
+            zip \
+            unzip \
+            libncurses5-dev \
+            libncursesw5-dev \
+            libtinfo5 \
+            libffi-dev \
+            libssl-dev \
+            cmake
+
+    - name: Install Buildozer and Cython
+      run: |
+        pip install --upgrade pip
+        pip install cython==0.30.10
+        pip install buildozer
 
     - name: Build with Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1
-      id: buildozer
-      with:
-        command: buildozer -v android debug
-      env:
-        ANDROID_API: "33"
-        ANDROID_NDK: "25b"
+      run: |
+        buildozer -v android debug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
